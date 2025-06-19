@@ -514,6 +514,33 @@
             lda #API_GROUP_GRAPHICS
             sta API_COMMAND
 
+        small_blit_image:
+            lda #API_FN_BLITTER_BLIT_IMG ; simple blit
+            sta API_FUNCTION
+
+            lda #2 ; blitter action = solid & masked
+            sta API_PARAMETERS 
+
+            lda #<small_rectangle_data  ; source rectangle data address
+            sta API_PARAMETERS + 1
+            lda #>small_rectangle_data
+            sta API_PARAMETERS + 2
+
+            lda #<small_target_x      ; target coordinates
+            sta API_PARAMETERS + 3
+            lda #>small_target_x      
+            sta API_PARAMETERS + 4
+            lda #<small_target_y
+            sta API_PARAMETERS + 5
+            lda #>small_target_y
+            sta API_PARAMETERS + 6
+
+            lda #0 ; destination format = write whole byte
+            sta API_PARAMETERS + 7
+
+            lda #API_GROUP_BLITTER     ; 12
+            sta API_COMMAND  
+
             ;---------------------- Small squares ----------------------
 
             ; Set the colour to Blue
@@ -741,3 +768,21 @@
             sta API_COMMAND
 
     .endmacro
+
+small_target_x = 77
+small_target_y = 83
+small_target_color = 7
+
+small_rectangle_data:
+    .word small_image_data
+    .byte 0 ; memory type (0 = RAM)
+    .byte 0 ; pad byte (must be zero)
+    .word 17 ; stride length (bytes per row = width/8)
+    .byte 2 ; data format (2 = 1bpp)
+    .byte 0 ; transparent color 
+    .byte target_color ; solid color 
+    .byte 10 ; height
+    .word 136 ; width
+
+small_image_data:
+    .incbin "assets/small_bitriotdev.gfx"

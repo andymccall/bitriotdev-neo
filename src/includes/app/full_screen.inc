@@ -293,6 +293,33 @@
             lda #API_GROUP_GRAPHICS
             sta API_COMMAND
 
+        blit_image:
+            lda #API_FN_BLITTER_BLIT_IMG ; simple blit
+            sta API_FUNCTION
+
+            lda #2 ; blitter action = solid & masked
+            sta API_PARAMETERS 
+
+            lda #<rectangle_data  ; source rectangle data address
+            sta API_PARAMETERS + 1
+            lda #>rectangle_data
+            sta API_PARAMETERS + 2
+
+            lda #<target_x      ; target coordinates
+            sta API_PARAMETERS + 3
+            lda #>target_x      
+            sta API_PARAMETERS + 4
+            lda #<target_y
+            sta API_PARAMETERS + 5
+            lda #>target_y
+            sta API_PARAMETERS + 6
+
+            lda #0 ; destination format = write whole byte
+            sta API_PARAMETERS + 7
+
+            lda #API_GROUP_BLITTER     ; 12
+            sta API_COMMAND  
+
             ;------------------- Middle Thin Blocks -------------------
 
             ; Set the colour to red
@@ -820,5 +847,20 @@
 
         .endmacro
 
+target_x = 30
+target_y = 50
+target_color = 7
+
+rectangle_data:
+    .word full_image_data
+    .byte 0 ; memory type (0 = RAM)
+    .byte 0 ; pad byte (must be zero)
+    .word 33 ; stride length (bytes per row = width/8)
+    .byte 2 ; data format (2 = 1bpp)
+    .byte 0 ; transparent color 
+    .byte target_color ; solid color 
+    .byte 20 ; height
+    .word 264 ; width
+
 full_image_data:
-    .incbin "assets/full_bitriotdev.bin"
+    .incbin "assets/full_bitriotdev.gfx"

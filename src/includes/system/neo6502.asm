@@ -438,7 +438,7 @@ API_FN_ANALOG_READ  = $07 ; API function
 
 
 ; Blitter functions (Group 12)
-API_GROUP_BLITTER              = $0B ; API function group
+API_GROUP_BLITTER              = $0C ; API function group
 API_FN_BLITTER_BUSY            = $01
 API_FN_BLITTER_SIMPLE_CPY      = $02
 API_FN_BLITTER_COMPLEX_CPY     = $03
